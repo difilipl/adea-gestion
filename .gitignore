@@ -1,0 +1,20 @@
+# --- IDE ---
+.idea/
+.vscode/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Symfony (Back) ---
+/back/vendor/
+/back/var/
+/back/public/bundles/
+/back/.env.local
+/back/.env.local.php
+/back/.env.*.local
+
+# --- React (Front) ---
+/front/node_modules/
+/front/dist/
+/front/.env.local

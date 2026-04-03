@@ -1,0 +1,65 @@
+<div {{ attributes }}>
+    {{ form_start(form) }}
+    <div class="p-2 bg-yellow-100 text-yellow-800 border border-yellow-200 mb-4">
+        DEBUG : Nombre d'étapes dans l'objet : {{ form.modeleEtapes|length }}
+    </div>
+
+    <div class="space-y-8">
+        {# SECTION 1 : Infos Générales #}
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Informations de base</h2>
+            <div class="max-w-md">
+                {{ form_row(form.nom, {
+                    'label': 'Nom du modèle',
+                    'attr': {'class': 'w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500'}
+                }) }}
+            </div>
+        </div>
+
+        {# SECTION 2 : Les Étapes #}
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-700">Étapes du schéma</h2>
+                <p class="text-red-500 font-bold">
+                    DEBUG - Nombre d'étapes : {{ form.modeleEtapes|length }}
+                </p>
+                <button type="button"
+                        data-action="live#action"
+                        data-live-action-param="addEtape"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Ajouter une étape
+                </button>
+            </div>
+
+            <div class="grid gap-4">
+                {# BIEN VÉRIFIER : form.modeleEtapes ou form.etapes selon ton entité #}
+                {% for etapeForm in form.modeleEtapes %}
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-end gap-4 animate-in fade-in slide-in-from-top-2">
+                        <div class="flex-none w-16">
+                            {{ form_row(etapeForm.ordre, {'label': 'N°'}) }}
+                        </div>
+                        <div class="flex-grow">
+                            {{ form_row(etapeForm.type_etape, {'label': 'Type d\'étape'}) }}
+                        </div>
+                        <div class="w-32">
+                            {{ form_row(etapeForm.duree_jours, {'label': 'Durée (j)'}) }}
+                        </div>
+                        <button type="button" class="mb-2 p-2 text-red-500 hover:bg-red-50 rounded-lg">
+                            Supprimer
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# SECTION 3 : Enregistrement #}
+        <div class="pt-6 border-t flex justify-end">
+            <button type="submit" class="px-8 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transform hover:-translate-y-0.5 transition">
+                Sauvegarder le modèle
+            </button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+</div>

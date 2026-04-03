@@ -1,0 +1,128 @@
+@startuml
+' --- Paramètres visuels ---
+!theme plain
+hide circle
+skinparam classAttributeIconSize 0
+left to right direction
+
+' ==========================================
+'  ENTITÉS (Classes)
+' ==========================================
+
+class Client {
+  id : INT
+  email_principal : VARCHAR
+  telephone : VARCHAR
+  statut : VARCHAR
+  date_creation : TIMESTAMP
+  infos_importantes : TEXT
+}
+
+class Entreprise {
+  nom_entreprise : VARCHAR
+  siret : VARCHAR
+}
+
+class Particulier {
+  nom : VARCHAR
+  prenom : VARCHAR
+}
+
+class Contact {
+  id : INT
+  nom : VARCHAR
+  prenom : VARCHAR
+  poste : VARCHAR
+  telephone_direct : VARCHAR
+  email : VARCHAR
+}
+
+class Mission {
+  id : INT
+  titre : VARCHAR
+  date_debut : DATE
+  date_fin : DATE
+  statut : VARCHAR
+}
+
+class Etape {
+  id : INT
+  date_debut : DATE
+  date_fin_prevue : DATE
+  est_terminee : BOOLEAN
+}
+
+class ModeleMission {
+  id : INT
+  nom : VARCHAR
+}
+
+class ModeleEtape {
+  id : INT
+  ordre : INT
+  duree_jours : INT
+}
+
+class TypeEtape {
+  id : INT
+  nom : VARCHAR
+}
+
+class Document {
+  id : INT
+  nom : VARCHAR
+  chemin_local : VARCHAR
+  format : VARCHAR
+}
+
+class BibliothequeDoc {
+  id : INT
+  nom_modele : VARCHAR
+  chemin_fichier : VARCHAR
+}
+
+class Categorie {
+  id : INT
+  libelle : VARCHAR
+}
+
+class Email {
+  id : INT
+  sujet : VARCHAR
+  contenu : TEXT
+  expediteur : VARCHAR
+  date_reception : TIMESTAMP
+  message_id : VARCHAR
+}
+
+class Alerte {
+  id : INT
+  message : VARCHAR
+  date_echeance : TIMESTAMP
+  est_lue : BOOLEAN
+}
+
+
+Client <|-- Entreprise : "est une"
+Client <|-- Particulier : "est un"
+
+Entreprise "1" -- "0..*" Contact : "possède >"
+Client "1" -- "0..*" Mission : "demande >"
+Client "1" -- "0..*" Email : "reçoit >"
+Client "1" -- "0..*" Alerte : "déclenche >"
+
+
+ModeleMission "1" -- "0..*" Mission : "sert de modèle >"
+Mission "1" *-- "1..*" Etape : "est composée de >"
+TypeEtape "1" -- "0..*" Etape : "définit le type >"
+
+ModeleMission "1" *-- "1..*" ModeleEtape : "contient >"
+TypeEtape "1" -- "0..*" ModeleEtape : "est le type de >"
+
+
+Categorie "1" -- "0..*" Document : "classe >"
+Categorie "1" -- "0..*" BibliothequeDoc : "classe >"
+Mission "0..1" -- "0..*" Document : "associé à >"
+Etape "0..1" -- "0..*" Document : "associé à >"
+
+@enduml
