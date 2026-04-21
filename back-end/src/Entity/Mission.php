@@ -2,35 +2,43 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutGestion;
 use App\Repository\MissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['mission:read']])]
 class Mission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['mission:read'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['mission:read'])]
     private ?\DateTime $date_debut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['mission:read'])]
     private ?\DateTime $date_fin = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $statut = null;
+    #[ORM\Column(length: 50, enumType: StatutGestion::class)]
+    #[Groups(['mission:read'])]
+    private ?StatutGestion $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'missions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['mission:read'])]
     private ?Client $client = null;
 
     #[ORM\ManyToOne]
@@ -95,12 +103,12 @@ class Mission
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?StatutGestion
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(StatutGestion $statut): static
     {
         $this->statut = $statut;
 

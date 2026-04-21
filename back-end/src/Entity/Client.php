@@ -6,18 +6,28 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ApiResource]
+#[ORM\DiscriminatorColumn(name: 'dtype', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'client' => Client::class,
+    'pro' => Pro::class,
+    'particulier' => Particulier::class
+])]
 class Client
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Email(message: "Le format de l'email est invalide")]
     private ?string $email_principal = null;
 
     #[ORM\Column(length: 10)]

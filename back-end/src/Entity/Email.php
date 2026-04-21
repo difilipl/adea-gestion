@@ -23,6 +23,7 @@ class Email
     private ?string $contenu = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Email(message: "Le format de l'email est invalide")]
     private ?string $expediteur = null;
 
     #[ORM\Column]

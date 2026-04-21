@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: ProRepository::class)]
 #[ApiResource]
 class Pro extends Client
 {
     #[ORM\Column(length: 255)]
+    #[Groups(['mission:read'])]
     private ?string $nom_entreprise = null;
 
     #[ORM\Column(length: 14)]
