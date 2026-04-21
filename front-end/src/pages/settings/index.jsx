@@ -1,9 +1,9 @@
 import Header from "../../components/layout/Header.jsx";
 
-export default function Parametres(){
+export default function Index(){
     return (
         <>
-            <Header titre="Les Parametres" />
+            <Header titre="Les Index" />
 
 
 

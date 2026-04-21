@@ -1,8 +1,6 @@
 import Header from "../../components/layout/Header.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import StatusBadge from "../components/ui/atome/StatusBadge.jsx";
-import BadgeCount from "../components/ui/atome/BadgeCount.jsx";
 import {useNavigate} from "react-router-dom";
 import EntityCard from "../../components/ui/molécules/EntityCard.jsx";
 
@@ -24,7 +22,7 @@ const configClient = {
     }
 };
 
-export default function Clients() {
+export default function Index() {
     const [clients, setClients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [detailsCli, setDetailsCli] = useState(null);
@@ -60,7 +58,7 @@ export default function Clients() {
 
     return (
         <>
-            <Header titre="Les Clients" />
+            <Header titre="Les Index" />
 
             <div className="p-6 bg-gray-50 min-h-screen">
                 {/* Barre de recherche */}

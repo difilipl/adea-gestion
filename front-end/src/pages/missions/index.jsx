@@ -1,8 +1,6 @@
 import Header from "../../components/layout/Header.jsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import BadgeCount from "../components/ui/atome/BadgeCount.jsx";
-import StatusBadge from "../components/ui/atome/StatusBadge.jsx";
 import {useLocation} from "react-router-dom";
 import EntityCard from "../../components/ui/molécules/EntityCard.jsx";
 
@@ -21,7 +19,7 @@ const configMissions = {
     }
 };
 
-export default function Missions() {
+export default function Index() {
     const [missions, setMissions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation();
@@ -44,7 +42,7 @@ export default function Missions() {
         }
     }, [location.state]);
 
-    // Filtrage des clients basé sur la recherche
+
     const filteredMissions = missions.filter((mission) => {
         const search = searchTerm.toLowerCase();
         return (
@@ -59,7 +57,7 @@ export default function Missions() {
 
     return (
         <>
-            <Header titre="Les Missions"/>
+            <Header titre="Les Index"/>
 
             <div className="p-6 bg-gray-50 min-h-screen">
                 {/* Barre de recherche */}

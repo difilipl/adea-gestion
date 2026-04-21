@@ -1,5 +1,5 @@
-import StatusBadge from "../atome/StatusBadge.jsx";
-import BadgeCount from "../atome/BadgeCount.jsx";
+import StatusBadge from "../atomes/StatusBadge.jsx";
+import BadgeCount from "../atomes/BadgeCount.jsx";
 
 export default function EntityCard({
     title,

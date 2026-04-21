@@ -42,7 +42,7 @@ function getMissionsParStatut(missions) {
     return Object.entries(counts).map(([name, value]) => ({ name, value }))
 }
 
-export default function Dashboard() {
+export default function Index() {
     const [missions, setMissions] = useState([])
 
     useEffect(() => {
