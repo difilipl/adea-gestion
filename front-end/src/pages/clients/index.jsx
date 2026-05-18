@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import EntityCard from "../../components/ui/molécules/EntityCard.jsx";
+import { getNomClient } from "../../utils/client.js";
 
 
 const configClient = {
@@ -26,7 +27,7 @@ export default function Index() {
     const [clients, setClients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [detailsCli, setDetailsCli] = useState(null);
-    const naviguate = useNavigate()
+    const navigate = useNavigate()
 
     useEffect(() => {
         axios.get('http://localhost:8000/api/clients')
@@ -56,9 +57,23 @@ export default function Index() {
         else setDetailsCli(null);
     }
 
+    const deleteClient = async (clientid) => {
+        if (!window.confirm("Voulez-vous vraiment supprimer ce client?")) {
+            return;
+        }
+
+        try{
+            await axios.delete(`http://localhost:8000/api/clients/${clientid}`)
+            setClients(prev => prev.filter(c => c.id !== clientid));
+        }catch (err) {
+            console.error("Erreur lors de la suppression :", err);
+            alert("Impossible de supprimer le client.");
+        }
+    }
+
     return (
         <>
-            <Header titre="Les Index" />
+            <Header titre="Les clients" />
 
             <div className="p-6 bg-gray-50 min-h-screen">
                 {/* Barre de recherche */}
@@ -82,12 +97,25 @@ export default function Index() {
                     </div>
                 </div>
 
+                {/* Bouton de creation */}
+                <div className="mb-4">
+                    <button
+                        onClick={() => navigate('/clients/create')}
+                        className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white text-sm font-semibold rounded-2xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all shadow-sm whitespace-nowrap"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Créer un nouveau client
+                    </button>
+                </div>
+
                 {/* Liste verticale */}
                 <ul className="flex flex-col gap-3">
                     {filteredClients.length > 0 ? (
                         filteredClients.map((client) => {
 
-                            const typeClient = configClient[client.statut?.toLowerCase()] || {
+                            const typeClient = configClient[client['@type']?.toLowerCase()] || {
                                 icone: "❓",
                                 couleur: "bg-gray-100",
                                 bouton: "bg-gray-600 hover:bg-gray-700"
@@ -96,7 +124,7 @@ export default function Index() {
                             return (
                                 <EntityCard
                                     key={client.id}
-                                    title={client.nomEntreprise || "Client Particulier"}
+                                    title={getNomClient(client)}
                                     subtitle={`ID: ${client.id} • ${client['@type']}`}
                                     info1={client.email_principal}
                                     info2={client.telephone}
@@ -133,6 +161,11 @@ export default function Index() {
 
                                     <div className="flex flex-wrap gap-3 justify-end mt-4">
                                         <button
+                                            onClick={(e) => { e.stopPropagation(); deleteClient(client.id); }}
+                                        >
+                                            Supprimer le client
+                                        </button>
+                                        <button
                                             onClick={(e) => e.stopPropagation()}
                                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                                         >
@@ -142,7 +175,7 @@ export default function Index() {
                                             onClick={(e) => {
                                                 e.stopPropagation();
 
-                                                naviguate('/missions', {state: { param : client.nom || client.nomEntreprise }});
+                                                navigate('/missions', {state: { param : client.nom || client.nomEntreprise }});
                                             }}
                                             className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors shadow-sm ${typeClient.bouton}`}
                                         >

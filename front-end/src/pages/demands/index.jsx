@@ -3,7 +3,7 @@ import Header from "../../components/layout/Header.jsx";
 export default function Index(){
     return (
         <>
-            <Header titre="Les Index" />
+            <Header titre="Les demandes" />
 
 
 
