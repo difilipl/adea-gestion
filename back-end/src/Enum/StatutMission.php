@@ -2,8 +2,10 @@
 
 namespace App\Enum;
 
-enum StatutGestion: string
+enum StatutMission: string
 {
 case EN_COURS = 'en cours';
-case PAS_EN_COURS = 'pas en cours';
+case PAS_EN_COURS = 'en attente';
+case TERMINE = 'termine';
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\TypeClient;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,7 +35,7 @@ class Client
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    private ?TypeClient $statut = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $date_creation = null;
@@ -65,6 +66,7 @@ class Client
         $this->missions = new ArrayCollection();
         $this->emails = new ArrayCollection();
         $this->alertes = new ArrayCollection();
+        $this->date_creation = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -96,12 +98,12 @@ class Client
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?TypeClient
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(TypeClient $statut): static
     {
         $this->statut = $statut;
 

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enum\StatutGestion;
+use App\Enum\StatutMission;
 use App\Repository\MissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,13 +28,17 @@ class Mission
     #[Groups(['mission:read'])]
     private ?\DateTime $date_debut = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['mission:read'])]
-    private ?\DateTime $date_fin = null;
+    private ?\DateTime $date_fin_prevue = null;
 
-    #[ORM\Column(length: 50, enumType: StatutGestion::class)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['mission:read'])]
-    private ?StatutGestion $statut = null;
+    private ?\DateTime $date_fin_reel = null;
+
+    #[ORM\Column(length: 50, enumType: StatutMission::class)]
+    #[Groups(['mission:read'])]
+    private ?StatutMission $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'missions')]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,12 +46,14 @@ class Mission
     private ?Client $client = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['mission:read'])]
     private ?ModeleMission $modele_mission = null;
 
     /**
      * @var Collection<int, Etape>
      */
-    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'mission', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'mission', orphanRemoval: true, cascade: ['persist'])]
+    #[Groups(['mission:read'])]
     private Collection $etapes;
 
     /**
@@ -91,24 +97,35 @@ class Mission
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFinPrevue(): ?\DateTime
     {
-        return $this->date_fin;
+        return $this->date_fin_prevue;
     }
 
-    public function setDateFin(\DateTime $date_fin): static
+    public function setDateFinPrevue(\DateTime $date_fin_prevue): static
     {
-        $this->date_fin = $date_fin;
+        $this->date_fin_prevue = $date_fin_prevue;
+
+        return $this;
+    }
+    public function getDateFinReel(): ?\DateTime
+    {
+        return $this->date_fin_reel;
+    }
+
+    public function setDateFinReel(\DateTime $date_fin_reel): static
+    {
+        $this->date_fin_reel = $date_fin_reel;
 
         return $this;
     }
 
-    public function getStatut(): ?StatutGestion
+    public function getStatut(): ?StatutMission
     {
         return $this->statut;
     }
 
-    public function setStatut(StatutGestion $statut): static
+    public function setStatut(StatutMission $statut): static
     {
         $this->statut = $statut;
 
