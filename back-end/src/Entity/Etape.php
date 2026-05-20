@@ -10,25 +10,25 @@ use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EtapeRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['etape:read']])]
 class Etape
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['mission:read'])]
+    #[Groups(['etape:read', 'mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['mission:read'])]
+    #[Groups(['etape:read', 'mission:read'])]
     private ?\DateTime $date_debut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['mission:read'])]
+    #[Groups(['etape:read', 'mission:read'])]
     private ?\DateTime $date_fin_prevue = null;
 
     #[ORM\Column]
-    #[Groups(['mission:read'])]
+    #[Groups(['etape:read', 'mission:read'])]
     private ?bool $est_terminee = null;
 
     #[ORM\ManyToOne(inversedBy: 'etapes')]
@@ -37,13 +37,14 @@ class Etape
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['mission:read'])]
+    #[Groups(['etape:read', 'mission:read'])]
     private ?TypeEtape $type_etape = null;
 
     /**
      * @var Collection<int, Document>
      */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'etape')]
+    #[Groups(['etape:read'])]
     private Collection $documents;
 
     public function __construct()

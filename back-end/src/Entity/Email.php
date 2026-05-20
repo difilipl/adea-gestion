@@ -6,27 +6,34 @@ use App\Repository\EmailRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EmailRepository::class)]
 #[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['email:read']])]
 class Email
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['email:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['email:read'])]
     private ?string $sujet = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['email:read'])]
     private ?string $contenu = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Email(message: "Le format de l'email est invalide")]
+    #[Groups(['email:read'])]
     private ?string $expediteur = null;
 
     #[ORM\Column]
+    #[Groups(['email:read'])]
     private ?\DateTimeImmutable $date_reception = null;
 
     #[ORM\Column(length: 255)]

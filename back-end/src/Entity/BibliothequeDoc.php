@@ -5,23 +5,29 @@ namespace App\Entity;
 use App\Repository\BibliothequeDocRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
+
 #[ORM\Entity(repositoryClass: BibliothequeDocRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['bibliotheque:read']])]
 class BibliothequeDoc
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['bibliotheque:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['bibliotheque:read'])]
     private ?string $nom_modele = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['bibliotheque:read'])]
     private ?string $chemin_fichier = null;
 
     #[ORM\ManyToOne(inversedBy: 'bibliothequeDocs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['bibliotheque:read'])]
     private ?Categorie $categorie = null;
 
     public function getId(): ?int

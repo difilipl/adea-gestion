@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['client:read']])]
 #[ORM\DiscriminatorColumn(name: 'dtype', type: 'string')]
 #[ORM\DiscriminatorMap([
     'client' => Client::class,
@@ -24,20 +24,24 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['mission:read'])]
+    #[Groups(['client:read', 'mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Email(message: "Le format de l'email est invalide")]
+    #[Groups(['client:read'])]
     private ?string $email_principal = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['client:read'])]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['client:read'])]
     private ?TypeClient $statut = null;
 
     #[ORM\Column]
+    #[Groups(['client:read'])]
     private ?\DateTimeImmutable $date_creation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -55,17 +59,11 @@ class Client
     #[ORM\OneToMany(targetEntity: Email::class, mappedBy: 'client', orphanRemoval: true)]
     private Collection $emails;
 
-    /**
-     * @var Collection<int, Alerte>
-     */
-    #[ORM\OneToMany(targetEntity: Alerte::class, mappedBy: 'client', orphanRemoval: true)]
-    private Collection $alertes;
 
     public function __construct()
     {
         $this->missions = new ArrayCollection();
         $this->emails = new ArrayCollection();
-        $this->alertes = new ArrayCollection();
         $this->date_creation = new \DateTimeImmutable();
     }
 
@@ -188,36 +186,6 @@ class Client
             // set the owning side to null (unless already changed)
             if ($email->getClient() === $this) {
                 $email->setClient(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Alerte>
-     */
-    public function getAlertes(): Collection
-    {
-        return $this->alertes;
-    }
-
-    public function addAlerte(Alerte $alerte): static
-    {
-        if (!$this->alertes->contains($alerte)) {
-            $this->alertes->add($alerte);
-            $alerte->setClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlerte(Alerte $alerte): static
-    {
-        if ($this->alertes->removeElement($alerte)) {
-            // set the owning side to null (unless already changed)
-            if ($alerte->getClient() === $this) {
-                $alerte->setClient(null);
             }
         }
 

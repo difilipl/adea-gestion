@@ -9,23 +9,24 @@ use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ModeleMissionRepository::class)]
-#[ApiResource(normalizationContext: ['groups' => ['read']])]
+#[ApiResource(normalizationContext: ['groups' => ['modele_mission:read']])]
 class ModeleMission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['modele_mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['modele_mission:read'])]
     private ?string $nom = null;
 
     /**
      * @var Collection<int, ModeleEtape>
      */
     #[ORM\OneToMany(targetEntity: ModeleEtape::class, mappedBy: 'modele_mission')]
-    #[Groups(['read'])]
+    #[Groups(['modele_mission:read'])]
     private Collection $modeleEtapes;
 
     public function __construct()

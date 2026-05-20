@@ -4,29 +4,36 @@ namespace App\Entity;
 
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['contact:read']])]
 class Contact
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contact:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:read'])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:read'])]
     private ?string $poste = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['contact:read'])]
     private ?string $telephone_direct = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:read'])]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'contacts')]

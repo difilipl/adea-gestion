@@ -57,15 +57,24 @@ class Mission
     private Collection $etapes;
 
     /**
+     * @var Collection<int, Alerte>
+     */
+    #[ORM\OneToMany(targetEntity: Alerte::class, mappedBy: 'mission', orphanRemoval: true)]
+    #[Groups(['mission:read'])]
+    private Collection $alertes;
+
+    /**
      * @var Collection<int, Document>
      */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'mission')]
+    #[Groups(['mission:read'])]
     private Collection $documents;
 
     public function __construct()
     {
         $this->etapes = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->alertes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -213,6 +222,30 @@ class Mission
             }
         }
 
+        return $this;
+    }
+
+    public function getAlertes(): Collection
+    {
+        return $this->alertes;
+    }
+
+    public function addAlerte(Alerte $alerte): static
+    {
+        if (!$this->alertes->contains($alerte)) {
+            $this->alertes->add($alerte);
+            $alerte->setMission($this);
+        }
+        return $this;
+    }
+
+    public function removeAlerte(Alerte $alerte): static
+    {
+        if ($this->alertes->removeElement($alerte)) {
+            if ($alerte->getMission() === $this) {
+                $alerte->setMission(null);
+            }
+        }
         return $this;
     }
 }

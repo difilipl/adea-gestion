@@ -7,15 +7,15 @@ use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ParticulierRepository::class)]
-#[ApiResource]
 class Particulier extends Client
 {
 
     #[ORM\Column(length: 255)]
-    #[Groups(['mission:read'])]
+    #[Groups(['client:read', 'mission:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['client:read', 'mission:read'])]
     private ?string $prenom = null;
 
 

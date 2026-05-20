@@ -5,27 +5,37 @@ namespace App\Entity;
 use App\Repository\AlerteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
+
 #[ORM\Entity(repositoryClass: AlerteRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['alerte:read']])]
 class Alerte
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['alerte:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['alerte:read'])]
     private ?string $message = null;
 
     #[ORM\Column]
+    #[Groups(['alerte:read'])]
     private ?\DateTimeImmutable $date_echeance = null;
 
     #[ORM\Column]
+    #[Groups(['alerte:read'])]
     private ?bool $est_lue = null;
 
-    #[ORM\ManyToOne(inversedBy: 'alertes')]
+    #[ORM\Column(length: 50)]
+    #[Groups(['alerte:read'])]
+    private string $type = 'info';
+
     #[ORM\JoinColumn(nullable: false)]
-    private ?Client $client = null;
+    #[ORM\ManyToOne(inversedBy: 'alertes')]
+    private ?Mission $mission = null;
 
     public function getId(): ?int
     {
@@ -67,15 +77,23 @@ class Alerte
 
         return $this;
     }
-
-    public function getClient(): ?Client
+    public function getType(): string
     {
-        return $this->client;
+        return $this->type;
+    }
+    public function setType(string $type): static
+    {
+        $this->type = $type; return $this;
     }
 
-    public function setClient(?Client $client): static
+    public function getMission(): ?Mission
     {
-        $this->client = $client;
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

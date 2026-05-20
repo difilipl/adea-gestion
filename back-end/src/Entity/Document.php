@@ -4,27 +4,33 @@ namespace App\Entity;
 
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['document:read']])]
 class  Document
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['document:read', 'mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['document:read', 'mission:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['document:read', 'mission:read'])]
     private ?string $chemin_local = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['document:read', 'mission:read'])]
     private ?string $format = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['document:read'])]
     private ?Categorie $categorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'documents')]

@@ -7,20 +7,21 @@ use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ModeleEtapeRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['modele_mission:read']])]
 class ModeleEtape
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['modele_mission:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['read'])]
+    #[Groups(['modele_mission:read'])]
     private ?int $ordre = null;
 
     #[ORM\Column]
-    #[Groups(['read'])]
+    #[Groups(['modele_mission:read'])]
     private ?int $duree_jours = null;
 
     #[ORM\ManyToOne(inversedBy: 'modeleEtapes')]
@@ -29,6 +30,7 @@ class ModeleEtape
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['modele_mission:read'])]
     private ?TypeEtape $type_etape = null;
 
     public function getId(): ?int
