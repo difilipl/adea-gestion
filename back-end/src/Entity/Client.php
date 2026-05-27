@@ -29,11 +29,11 @@ class Client
 
     #[ORM\Column(length: 255)]
     #[Assert\Email(message: "Le format de l'email est invalide")]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'mission:read'])]
     private ?string $email_principal = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'mission:read'])]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255)]
@@ -51,6 +51,7 @@ class Client
      * @var Collection<int, Mission>
      */
     #[ORM\OneToMany(targetEntity: Mission::class, mappedBy: 'client', orphanRemoval: true)]
+    #[Groups(['client:read', 'mission:summary'])]
     private Collection $missions;
 
     /**
@@ -59,12 +60,19 @@ class Client
     #[ORM\OneToMany(targetEntity: Email::class, mappedBy: 'client', orphanRemoval: true)]
     private Collection $emails;
 
+    /**
+     * @var Collection<int, Document>
+     */
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'client')]
+    private Collection $documents;
+
 
     public function __construct()
     {
         $this->missions = new ArrayCollection();
         $this->emails = new ArrayCollection();
         $this->date_creation = new \DateTimeImmutable();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,6 +194,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($email->getClient() === $this) {
                 $email->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getClient() === $this) {
+                $document->setClient(null);
             }
         }
 

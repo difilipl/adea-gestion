@@ -23,7 +23,6 @@ class ProFixtures extends Fixture
 
         $manager->persist($pro);
         $manager->flush();
-
         $this->addReference(self::PRO_TEST_REF, $pro);
     }
 }

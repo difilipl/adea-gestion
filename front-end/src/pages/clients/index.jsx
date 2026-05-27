@@ -29,6 +29,13 @@ export default function Index() {
     const [detailsCli, setDetailsCli] = useState(null);
     const navigate = useNavigate()
 
+    const [showDocsModal, setShowDocsModal] = useState(false);
+    const [clientSelectionne, setClientSelectionne] = useState(null);
+    const [documentsClient, setDocumentsClient] = useState([]);
+    const [fichierClient, setFichierClient] = useState(null);
+    const [nomDocClient, setNomDocClient] = useState("");
+    const [uploadingClient, setUploadingClient] = useState(false);
+
     useEffect(() => {
         axios.get('http://localhost:8000/api/clients')
             .then(response => {
@@ -70,6 +77,51 @@ export default function Index() {
             alert("Impossible de supprimer le client.");
         }
     }
+
+    const ouvrirDocsClient = (e, client) => {
+        e.stopPropagation();
+        setClientSelectionne(client);
+
+        axios.get(`http://localhost:8000/api/documents?client_id=${client.id}`)
+            .then(response => {
+                setDocumentsClient(Array.isArray(response.data) ? response.data : []);
+            })
+            .catch(() => setDocumentsClient([]));
+
+        setShowDocsModal(true);
+    };
+
+    const handleUploadClient = async () => {
+        if (!fichierClient) return;
+        setUploadingClient(true);
+
+        const formData = new FormData();
+        formData.append("fichier", fichierClient);
+        formData.append("nom", nomDocClient || fichierClient.name);
+        formData.append("client_id", clientSelectionne.id);
+
+        try {
+            const res = await axios.post("http://localhost:8000/api/documents/upload", formData);
+            setDocumentsClient(prev => [...prev, res.data]);
+            setFichierClient(null);
+            setNomDocClient("");
+        } catch (e) {
+            alert("Erreur lors de l'upload.", e);
+        } finally {
+            setUploadingClient(false);
+        }
+    };
+
+    const handleDeleteDocClient = async (docId) => {
+        if (!window.confirm("Supprimer ce document ?")) return;
+        try {
+            await axios.delete(`http://localhost:8000/api/documents/${docId}`);
+            setDocumentsClient(prev => prev.filter(d => d.id !== docId));
+        } catch (err) {
+            console.error("Erreur suppression:", err);
+        }
+    };
+
 
     return (
         <>
@@ -166,7 +218,7 @@ export default function Index() {
                                             Supprimer le client
                                         </button>
                                         <button
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => ouvrirDocsClient(e, client)}
                                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                                         >
                                             Documents généraux
@@ -190,7 +242,94 @@ export default function Index() {
                         <div className="text-center py-12 text-gray-400">Aucun résultat</div>
                     )}
                 </ul>
+                {showDocsModal && (
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl p-6 w-[600px] max-h-[80vh] overflow-y-auto shadow-xl">
+
+                            {/* Header modale */}
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-semibold text-lg">
+                                    Documents — {getNomClient(clientSelectionne)}
+                                </h3>
+                                <button
+                                    onClick={() => setShowDocsModal(false)}
+                                    className="text-gray-400 hover:text-gray-600 text-xl"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            {/* Liste des documents */}
+                            {documentsClient.length === 0 ? (
+                                <p className="text-gray-400 text-sm text-center border border-dashed border-gray-200 rounded-lg p-6 mb-4">
+                                    Aucun document pour ce client.
+                                </p>
+                            ) : (
+                                <div className="flex flex-col gap-2 mb-4">
+                                    {documentsClient.map(doc => (
+                                        <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-100 rounded-lg">
+                                            <div>
+                                                <p className="font-medium text-sm text-gray-800">{doc.nom}</p>
+                                                <p className="text-xs text-gray-400">{doc.type_mime} · {doc.date_upload}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <a
+                                                href={`http://localhost:8000/${doc.chemin}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white"
+                                                >
+                                                Télécharger
+                                            </a>
+                                            <button
+                                                onClick={() => handleDeleteDocClient(doc.id)}
+                                                className="px-3 py-1.5 text-xs border border-red-200 text-red-500 rounded-lg hover:bg-red-50"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </div>
+                                        </div>
+                                        ))}
+                                </div>
+                                )}
+
+                            {/* Formulaire upload */}
+                            <div className="border-t border-gray-100 pt-4">
+                                <p className="text-sm font-medium text-gray-700 mb-3">Ajouter un document</p>
+                                <input
+                                    type="text"
+                                    placeholder="Nom du document (optionnel)"
+                                    value={nomDocClient}
+                                    onChange={e => setNomDocClient(e.target.value)}
+                                    className="w-full border border-gray-200 rounded-lg p-2 mb-3 text-sm"
+                                />
+                                <input
+                                    type="file"
+                                    onChange={e => setFichierClient(e.target.files[0])}
+                                    className="w-full mb-3 text-sm"
+                                />
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        onClick={() => setShowDocsModal(false)}
+                                        className="px-4 py-2 text-sm border border-gray-200 rounded-lg"
+                                    >
+                                        Fermer
+                                    </button>
+                                    <button
+                                        onClick={handleUploadClient}
+                                        disabled={!fichierClient || uploadingClient}
+                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                    >
+                                        {uploadingClient ? "Upload en cours..." : "Uploader"}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    )}
             </div>
+
         </>
     );
 }

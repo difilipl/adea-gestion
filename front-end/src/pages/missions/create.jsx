@@ -169,7 +169,7 @@ export default function Create() {
                         <div className="flex items-center justify-end gap-4 pt-6 mt-6 border-t border-gray-100">
                             <button
                                 type="button"
-                                onClick={() => navigate('/missions')}
+                                onClick={() => navigate(-1)}
                                 className="px-6 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all"
                             >
                                 Annuler

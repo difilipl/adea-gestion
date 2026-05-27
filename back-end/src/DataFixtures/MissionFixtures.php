@@ -18,7 +18,6 @@ class MissionFixtures extends Fixture implements DependentFixtureInterface
         // 1. Récupération des clients depuis leurs fixtures dédiées
         $clientPro = $this->getReference(ProFixtures::PRO_TEST_REF, Pro::class);
         $clientParticulier = $this->getReference(ParticulierFixtures::PARTICULIER_TEST_REF, Particulier::class);
-
         // 2. Récupération des modèles (index 0 = urbanisme, index 14 = pré-compta)
         $modeleUrba = $this->getReference('modele_mission_0', ModeleMission::class);
         $modelePrecompta = $this->getReference('modele_mission_14', ModeleMission::class);

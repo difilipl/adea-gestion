@@ -2,12 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\DocumentRepository;
-use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
-#[ApiResource(normalizationContext: ['groups' => ['document:read']])]
+#[ApiResource(
+    normalizationContext: ['groups' => ['document:read']],
+    operations: [
+        new Get(),
+        new Delete(),
+    ]
+)]
 class  Document
 {
     #[ORM\Id]
@@ -22,14 +31,14 @@ class  Document
 
     #[ORM\Column(length: 255)]
     #[Groups(['document:read', 'mission:read'])]
-    private ?string $chemin_local = null;
+    private ?string $chemin_fichier = null;
 
     #[ORM\Column(length: 10)]
     #[Groups(['document:read', 'mission:read'])]
     private ?string $format = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['document:read'])]
     private ?Categorie $categorie = null;
 
@@ -38,6 +47,18 @@ class  Document
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Etape $etape = null;
+
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Client $client = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type_mime = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $taille = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $date_upload = null;
 
     public function getId(): ?int
     {
@@ -56,14 +77,14 @@ class  Document
         return $this;
     }
 
-    public function getCheminLocal(): ?string
+    public function getCheminFichier(): ?string
     {
-        return $this->chemin_local;
+        return $this->chemin_fichier;
     }
 
-    public function setCheminLocal(string $chemin_local): static
+    public function setCheminFichier(string $chemin_fichier): static
     {
-        $this->chemin_local = $chemin_local;
+        $this->chemin_fichier = $chemin_fichier;
 
         return $this;
     }
@@ -112,6 +133,54 @@ class  Document
     public function setEtape(?Etape $etape): static
     {
         $this->etape = $etape;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getTypeMime(): ?string
+    {
+        return $this->type_mime;
+    }
+
+    public function setTypeMime(?string $type_mime): static
+    {
+        $this->type_mime = $type_mime;
+
+        return $this;
+    }
+
+    public function getTaille(): ?int
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?int $taille): static
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getDateUpload(): ?\DateTimeImmutable
+    {
+        return $this->date_upload;
+    }
+
+    public function setDateUpload(\DateTimeImmutable $date_upload): static
+    {
+        $this->date_upload = $date_upload;
 
         return $this;
     }

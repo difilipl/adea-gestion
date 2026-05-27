@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: ProRepository::class)]
+#[ApiResource(normalizationContext: ['groups' => ['client:read']])]
 class Pro extends Client
 {
     #[ORM\Column(length: 255)]

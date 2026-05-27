@@ -1,3 +1,3 @@
 export const getNomClient = (client) => {
-    return client?.nomEntreprise || client?.nom || "Client inconnu";
+    return client?.nom_entreprise || client?.nom || "Client inconnu";
 };

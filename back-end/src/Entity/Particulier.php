@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ParticulierRepository::class)]
+#[ApiResource(normalizationContext: ['groups' => ['client:read']])]
 class Particulier extends Client
 {
 

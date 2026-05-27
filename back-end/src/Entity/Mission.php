@@ -21,7 +21,7 @@ class Mission
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['mission:read'])]
+    #[Groups(['mission:read', 'mission:summary'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -37,7 +37,7 @@ class Mission
     private ?\DateTime $date_fin_reel = null;
 
     #[ORM\Column(length: 50, enumType: StatutMission::class)]
-    #[Groups(['mission:read'])]
+    #[Groups(['mission:read', 'mission:summary'])]
     private ?StatutMission $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'missions')]

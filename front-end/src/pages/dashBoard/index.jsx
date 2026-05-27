@@ -77,7 +77,7 @@ export default function Index() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     {[
                         { title: 'Missions totales', value: missions.length },
-                        { title: 'En cours de traitement', value: missions.filter(m => m.statut !== 'Terminé').length },
+                        { title: 'En cours de traitement', value: missions.filter(m => m.statut !== 'Terminé' && m.statut !== 'en attente').length },
                         { title: 'Nouveaux messages', value: 0 },
                     ].map(card => (
                         <div key={card.title} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">

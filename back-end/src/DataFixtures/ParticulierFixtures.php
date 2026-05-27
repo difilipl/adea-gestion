@@ -22,7 +22,6 @@ class ParticulierFixtures extends Fixture
 
         $manager->persist($particulier);
         $manager->flush();
-
         $this->addReference(self::PARTICULIER_TEST_REF, $particulier);
     }
 }
