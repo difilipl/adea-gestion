@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/layout/Header.jsx";
+
 export default function Create() {
     const navigate = useNavigate();
-
 
     const [formData, setFormData] = useState({
         nom: "",
@@ -17,8 +17,6 @@ export default function Create() {
 
     const [loadingSubmit, setLoadingSubmit] = useState(false);
     const [error, setError] = useState(null);
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,13 +45,14 @@ export default function Create() {
             setLoadingSubmit(false);
         }
     };
+
     if (loadingSubmit) {
-        return <div className="p-6 text-center">Chargement du client...</div>;
+        return <div className="p-6 text-center">Création du client...</div>;
     }
 
     return (
         <>
-            <Header titre="Créer un nouveau client"/>
+            <Header titre="Créer un client particulier" />
 
             <div className="p-6 bg-gray-50 min-h-screen">
                 <div className="max-w-3xl mx-auto bg-white shadow-sm rounded-2xl p-8 border border-gray-100">
@@ -65,68 +64,73 @@ export default function Create() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* nom*/}
+
+                        {/* nom */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">nom *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Nom *</label>
                             <input
                                 type="text"
                                 name="nom"
                                 value={formData.nom}
                                 onChange={handleChange}
                                 required
-                                placeholder="nom du client"
+                                placeholder="Nom du client"
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             />
                         </div>
-                        {/* nom*/}
+
+                        {/* prenom */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">prénom *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Prénom *</label>
                             <input
                                 type="text"
                                 name="prenom"
                                 value={formData.prenom}
                                 onChange={handleChange}
                                 required
-                                placeholder="prenom du client"
+                                placeholder="Prénom du client"
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             />
                         </div>
-                        {/* email*/}
+
+                        {/* email */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">email *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                             <input
-                                type="text"
+                                type="email"
                                 name="email_principal"
                                 value={formData.email_principal}
                                 onChange={handleChange}
                                 required
-                                placeholder="email du client"
+                                placeholder="email@exemple.fr"
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             />
                         </div>
-                        {/* téléphone*/}
+
+                        {/* téléphone */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">numéro de téléphone *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Numéro de téléphone *</label>
                             <input
                                 type="text"
                                 name="telephone"
                                 value={formData.telephone}
                                 onChange={handleChange}
                                 required
-                                placeholder="prenom du client"
+                                placeholder="06 00 00 00 00"
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             />
                         </div>
-                        {/* info */}
+
+                        {/* infos_importantes — name corrigé */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">information supplémentaires</label>
-                            <input
-                                type="text"
-                                name="infos_importante"
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Informations supplémentaires</label>
+                            <textarea
+                                name="infos_importantes"
                                 value={formData.infos_importantes}
                                 onChange={handleChange}
-                                placeholder="..."
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                placeholder="Notes, remarques..."
+                                rows={3}
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
                             />
                         </div>
 

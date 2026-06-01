@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 #[ApiResource(normalizationContext: ['groups' => ['contact:read']])]
+#[ApiFilter(SearchFilter::class, properties: ['entreprise' => 'exact'])]
 class Contact
 {
     #[ORM\Id]

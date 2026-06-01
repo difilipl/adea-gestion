@@ -27,7 +27,7 @@ export default function Index() {
         {
             titre: "Les Étapes",
             description: "ajouter des étapes type, qui reviennent souvent",
-            path: "/registry/etapes",
+            path: "/registry/etape",
             Icone: IconEtapes
         },
         {

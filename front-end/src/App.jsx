@@ -14,6 +14,8 @@ import ClientsIndex from "./pages/clients/index.jsx";
 import ClientsCreate from "./pages/clients/create.jsx";
 import ClientsCreateBusiness from "./pages/clients/create_business.jsx";
 import ClientsCreatePersonal from "./pages/clients/create_personal.jsx";
+import ClientsEditBusiness from "./pages/clients/edit_business.jsx";
+import ClientsEditPersonal from "./pages/clients/edit_personal.jsx";
 
 import PlanningIndex from "./pages/plannings/index.jsx";
 
@@ -48,6 +50,8 @@ function App() {
                     <Route path="/clients/create" element={<ClientsCreate />} />
                     <Route path="/clients/create_business" element={<ClientsCreateBusiness />} />
                     <Route path="/clients/create_personal" element={<ClientsCreatePersonal />} />
+                    <Route path="/clients/:clientId/edit_business" element={<ClientsEditBusiness />} />
+                    <Route path="/clients/:clientId/edit_personal" element={<ClientsEditPersonal />} />
 
 
                     <Route path="/plannings" element={<PlanningIndex />} />
