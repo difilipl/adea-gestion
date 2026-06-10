@@ -1,7 +1,6 @@
-
 import { Routes, Route } from 'react-router-dom';
 
-import Sidebar from "./components/layout/SideBar.jsx";
+import PrivateRoute from "./components/ui/PrivateRoute.jsx";
 import DashBoardIndex from "./pages/dashBoard/index.jsx";
 
 import MissionIndex from "./pages/missions/index.jsx";
@@ -21,58 +20,52 @@ import PlanningIndex from "./pages/plannings/index.jsx";
 
 import RegistryIndex from "./pages/registry/index.jsx";
 import RegistryEtapeIndex from "./pages/registry/etape/etape.jsx";
-
 import RegistryMissionIndex from "./pages/registry/missions/missions.jsx";
 import RegistryMissionDetails from "./pages/registry/missions/missionDetails.jsx";
-
 import RegistryDocumentIndex from "./pages/registry/documents.jsx";
 
 import DemandIndex from "./pages/demands/index.jsx";
 import SettingsIndex from "./pages/settings/index.jsx";
 
+import Login from "./pages/login/index.jsx";
+
 function App() {
     return (
-        <div className="flex min-h-screen bg-slate-50">
-            <Sidebar />
-            <main className="flex-1">
-                <Routes>
-                    <Route path="/" element={<DashBoardIndex />} />
+        <Routes>
+            {/* Route publique, sans sidebar */}
+            <Route path="/login" element={<Login />} />
 
+            {/* Routes protégées, avec layout + sidebar */}
+            <Route element={<PrivateRoute />}>
+                <Route path="/" element={<DashBoardIndex />} />
 
-                    <Route path="/missions" element={<MissionIndex />} />
-                    <Route path="/missions/create" element={<MissionCreate />} />
-                    <Route path="/missions/:missionId" element={<MissionDetails />} />
-                    <Route path="/missions/:missionId/update" element={<MissionUpdate />} />
-                    <Route path="/missions/:missionId/etapes/:etapeId" element={<MissionEtape />} />
+                <Route path="/missions" element={<MissionIndex />} />
+                <Route path="/missions/create" element={<MissionCreate />} />
+                <Route path="/missions/:missionId" element={<MissionDetails />} />
+                <Route path="/missions/:missionId/update" element={<MissionUpdate />} />
+                <Route path="/missions/:missionId/etapes/:etapeId" element={<MissionEtape />} />
 
+                <Route path="/clients" element={<ClientsIndex />} />
+                <Route path="/clients/create" element={<ClientsCreate />} />
+                <Route path="/clients/create_business" element={<ClientsCreateBusiness />} />
+                <Route path="/clients/create_personal" element={<ClientsCreatePersonal />} />
+                <Route path="/clients/:clientId/edit_business" element={<ClientsEditBusiness />} />
+                <Route path="/clients/:clientId/edit_personal" element={<ClientsEditPersonal />} />
 
-                    <Route path="/clients" element={<ClientsIndex />} />
-                    <Route path="/clients/create" element={<ClientsCreate />} />
-                    <Route path="/clients/create_business" element={<ClientsCreateBusiness />} />
-                    <Route path="/clients/create_personal" element={<ClientsCreatePersonal />} />
-                    <Route path="/clients/:clientId/edit_business" element={<ClientsEditBusiness />} />
-                    <Route path="/clients/:clientId/edit_personal" element={<ClientsEditPersonal />} />
+                <Route path="/plannings" element={<PlanningIndex />} />
 
+                <Route path="/registry" element={<RegistryIndex />} />
+                <Route path="/registry/etape" element={<RegistryEtapeIndex />} />
+                <Route path="/registry/missions" element={<RegistryMissionIndex />} />
+                <Route path="/registry/missions/:id" element={<RegistryMissionDetails />} />
+                <Route path="/registry/documents" element={<RegistryDocumentIndex />} />
 
-                    <Route path="/plannings" element={<PlanningIndex />} />
+                <Route path="/demandes" element={<DemandIndex />} />
+                <Route path="/parametres" element={<SettingsIndex />} />
+            </Route>
+        </Routes>
 
-
-                    <Route path="/registry" element={<RegistryIndex />} />
-
-                    <Route path="/registry/etape" element={<RegistryEtapeIndex />} />
-
-                    <Route path="/registry/missions" element={<RegistryMissionIndex />} />
-                    <Route path="/registry/missions/:id" element={<RegistryMissionDetails />} />
-
-                    <Route path="/registry/documents" element={<RegistryDocumentIndex />} />
-
-
-                    <Route path="/demandes" element={<DemandIndex />} />
-                    <Route path="/parametres" element={<SettingsIndex />} />
-                </Routes>
-            </main>
-        </div>
-    );
+);
 }
 
 export default App;

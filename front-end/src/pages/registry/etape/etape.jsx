@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Header from "../../../components/layout/Header.jsx";
+import api from "../../../services/axios.js";
 
 export default function IndexTypesEtapes() {
     const [etapes, setEtapes] = useState([]);
@@ -12,7 +12,7 @@ export default function IndexTypesEtapes() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/type_etapes')
+        api.get('http://localhost:8000/api/type_etapes')
             .then(response => {
                 const data = response.data.member || response.data["hydra:member"] || [];
                 setEtapes(data);
@@ -29,7 +29,7 @@ export default function IndexTypesEtapes() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/type_etapes',
+            const response = await api.post('http://localhost:8000/api/type_etapes',
                 { nom: nomEtape },
                 { headers: { 'Content-Type': 'application/ld+json' } }
             );
@@ -53,7 +53,7 @@ export default function IndexTypesEtapes() {
         }
 
         try {
-            await axios.delete(`http://localhost:8000/api/type_etapes/${id}`);
+            await api.delete(`http://localhost:8000/api/type_etapes/${id}`);
             setEtapes(etapes.filter(etape => etape.id !== id));
         } catch (error) {
             console.error("Erreur lors de la suppression :", error);

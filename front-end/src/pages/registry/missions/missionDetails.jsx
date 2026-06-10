@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Header from "../../../components/layout/Header.jsx";
+import api from "../../../services/axios.js";
 
 export default function MissionDetails() {
     const { id } = useParams();
@@ -21,7 +21,7 @@ export default function MissionDetails() {
 
     const fetchMissionDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/modele_missions/${id}`);
+            const response = await api.get(`http://localhost:8000/api/modele_missions/${id}`);
             setMission(response.data);
         } catch (error) {
             console.error("Erreur lors de la récupération du modèle:", error);
@@ -33,7 +33,7 @@ export default function MissionDetails() {
             setLoading(true);
             try {
                 await fetchMissionDetails();
-                const resTypes = await axios.get('http://localhost:8000/api/type_etapes');
+                const resTypes = await api.get('http://localhost:8000/api/type_etapes');
                 setTypesEtape(resTypes.data.member || resTypes.data["hydra:member"] || []);
             } catch (error) {
                 console.error("Erreur API globale:", error);
@@ -73,12 +73,12 @@ export default function MissionDetails() {
             };
 
             if (editingEtape) {
-                await axios.put(`http://localhost:8000/api/modele_etapes/${editingEtape.id}`, payload, {
+                await api.put(`http://localhost:8000/api/modele_etapes/${editingEtape.id}`, payload, {
                     headers: { 'Content-Type': 'application/ld+json' }
                 });
             } else {
                 payload.modele_mission = `/api/modele_missions/${id}`;
-                await axios.post('http://localhost:8000/api/modele_etapes', payload, {
+                await api.post('http://localhost:8000/api/modele_etapes', payload, {
                     headers: { 'Content-Type': 'application/ld+json' }
                 });
             }
@@ -98,7 +98,7 @@ export default function MissionDetails() {
             return;
         }
         try {
-            await axios.delete(`http://localhost:8000/api/modele_etapes/${etapeId}`);
+            await api.delete(`http://localhost:8000/api/modele_etapes/${etapeId}`);
             setMission({
                 ...mission,
                 modeleEtapes: mission.modeleEtapes.filter(etape => etape.id !== etapeId)

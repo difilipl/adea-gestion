@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Header from "../../components/layout/Header.jsx";
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
 } from 'recharts'
+import api from "../../services/axios.js";
 
 const Icon = ({ path, className = "w-5 h-5" }) => (
     <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
@@ -12,11 +12,6 @@ const Icon = ({ path, className = "w-5 h-5" }) => (
     </svg>
 );
 
-const paths = {
-    missions: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-    plus: "M12 4.5v15m7.5-7.5h-15",
-    arrowRight: "M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3",
-};
 
 const COLORS = ['#3a7d67', '#c8b99a', '#94a3b8', '#f59e0b']
 
@@ -46,7 +41,7 @@ export default function Index() {
     const [missions, setMissions] = useState([])
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/missions')
+        api.get('http://localhost:8000/api/missions')
             .then(response => {
                 setMissions(response.data.member || [])
             })

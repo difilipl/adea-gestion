@@ -1,9 +1,9 @@
 import Header from "../../components/layout/Header.jsx";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import EntityCard from "../../components/ui/molécules/EntityCard.jsx";
 import { getNomClient } from "../../utils/client.js";
+import api from "../../services/axios.js";
 
 const configClient = {
     'client': {
@@ -46,7 +46,7 @@ export default function Index() {
     const [errorContact, setErrorContact] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/clients')
+        api.get('http://localhost:8000/api/clients')
             .then(response => {
                 if (response.data && response.data.member) {
                     setClients(response.data.member);
@@ -82,7 +82,7 @@ export default function Index() {
     };
 
     const chargerContacts = (clientId) => {
-        axios.get(`http://localhost:8000/api/contacts?entreprise=/api/pros/${clientId}`)
+        api.get(`http://localhost:8000/api/contacts?entreprise=/api/pros/${clientId}`)
             .then(response => {
                 const data = response.data?.member ?? response.data ?? [];
                 setContactsParClient(prev => ({ ...prev, [clientId]: Array.isArray(data) ? data : [] }));
@@ -105,7 +105,7 @@ export default function Index() {
                 ...newContact,
                 entreprise: `/api/pros/${clientId}`
             };
-            const res = await axios.post('http://localhost:8000/api/contacts', payload, {
+            const res = await api.post('http://localhost:8000/api/contacts', payload, {
                 headers: {
                     'Content-Type': 'application/ld+json',
                     'Accept': 'application/ld+json'
@@ -128,7 +128,7 @@ export default function Index() {
     const handleSupprimerContact = async (clientId, contactId) => {
         if (!window.confirm("Supprimer ce contact ?")) return;
         try {
-            await axios.delete(`http://localhost:8000/api/contacts/${contactId}`);
+            await api.delete(`http://localhost:8000/api/contacts/${contactId}`);
             setContactsParClient(prev => ({
                 ...prev,
                 [clientId]: prev[clientId].filter(c => c.id !== contactId)
@@ -141,7 +141,7 @@ export default function Index() {
     const deleteClient = async (clientid) => {
         if (!window.confirm("Voulez-vous vraiment supprimer ce client?")) return;
         try {
-            await axios.delete(`http://localhost:8000/api/clients/${clientid}`);
+            await api.delete(`http://localhost:8000/api/clients/${clientid}`);
             setClients(prev => prev.filter(c => c.id !== clientid));
         } catch (err) {
             console.error("Erreur lors de la suppression :", err);
@@ -152,7 +152,7 @@ export default function Index() {
     const ouvrirDocsClient = (e, client) => {
         e.stopPropagation();
         setClientSelectionne(client);
-        axios.get(`http://localhost:8000/api/documents?client_id=${client.id}`)
+        api.get(`http://localhost:8000/api/documents?client_id=${client.id}`)
             .then(response => {
                 setDocumentsClient(Array.isArray(response.data) ? response.data : []);
             })
@@ -168,7 +168,7 @@ export default function Index() {
         formData.append("nom", nomDocClient || fichierClient.name);
         formData.append("client_id", clientSelectionne.id);
         try {
-            const res = await axios.post("http://localhost:8000/api/documents/upload", formData);
+            const res = await api.post("http://localhost:8000/api/documents/upload", formData);
             setDocumentsClient(prev => [...prev, res.data]);
             setFichierClient(null);
             setNomDocClient("");
@@ -182,7 +182,7 @@ export default function Index() {
     const handleDeleteDocClient = async (docId) => {
         if (!window.confirm("Supprimer ce document ?")) return;
         try {
-            await axios.delete(`http://localhost:8000/api/documents/${docId}`);
+            await api.delete(`http://localhost:8000/api/documents/${docId}`);
             setDocumentsClient(prev => prev.filter(d => d.id !== docId));
         } catch (err) {
             console.error("Erreur suppression:", err);

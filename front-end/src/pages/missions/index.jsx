@@ -1,9 +1,9 @@
 import Header from "../../components/layout/Header.jsx";
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
 import EntityCard from "../../components/ui/molécules/EntityCard.jsx";
 import {getNomClient} from "../../utils/client.js";
+import api from "../../services/axios.js";
 
 const configMissions = {
     'mission': {
@@ -27,7 +27,7 @@ export default function Index() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/missions')
+        api.get('http://localhost:8000/api/missions')
             .then(response => {
                 if (response.data && response.data.member) {
                     setMissions(response.data.member);

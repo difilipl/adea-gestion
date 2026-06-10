@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
 import GanttControle from "../../components/ui/planning/GanttControle.jsx";
 import GanttHeader from "../../components/ui/planning/GanttHeader.jsx";
 import GanttLigne from "../../components/ui/planning/GanttLigne.jsx";
+import api from "../../services/axios.js";
 
 
 export default function Index(){
@@ -18,7 +18,7 @@ export default function Index(){
 
 
     useEffect(()=>{
-        axios.get('http://localhost:8000/api/missions')
+        api.get('http://localhost:8000/api/missions')
             .then(response => {
                     const data = response.data.member || [];
                     setMissions(data);

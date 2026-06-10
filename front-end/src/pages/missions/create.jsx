@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import Header from "../../components/layout/Header.jsx";
 import {getNomClient} from "../../utils/client.js";
+import api from "../../services/axios.js";
 
 export default function Create() {
     const navigate = useNavigate();
@@ -25,8 +26,8 @@ export default function Create() {
 
     useEffect(() => {
         Promise.all([
-            axios.get('http://localhost:8000/api/clients'),
-            axios.get('http://localhost:8000/api/modele_missions')
+            api.get('http://localhost:8000/api/clients'),
+            api.get('http://localhost:8000/api/modele_missions')
         ])
             .then(([responseClients, responseModeles]) => {
                 setClients(responseClients.data.member || responseClients.data["hydra:member"] || []);
@@ -52,7 +53,7 @@ export default function Create() {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/missions', formData, {
+            const response = await api.post('http://localhost:8000/api/missions', formData, {
                 headers: {
                     'Content-Type': 'application/ld+json',
                     'Accept': 'application/ld+json'

@@ -1,9 +1,9 @@
 import Header from "../../components/layout/Header.jsx";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import BadgeCount from "../../components/ui/atomes/BadgeCount.jsx";
 import StatusBadge from "../../components/ui/atomes/StatusBadge.jsx";
+import api from "../../services/axios.js";
 
 const formatTaille = (octets) => {
     if (!octets) return "";
@@ -25,7 +25,7 @@ export default function Etape() {
     const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/etapes/${etapeId}`)
+        api.get(`http://localhost:8000/api/etapes/${etapeId}`)
             .then(response => {
                 setEtape(response.data);
                 setLoading(false);
@@ -35,7 +35,7 @@ export default function Etape() {
                 setLoading(false);
             });
         console.log("etapeId:", etapeId);
-        axios.get(`http://localhost:8000/api/documents?etape_id=${etapeId}`)
+        api.get(`http://localhost:8000/api/documents?etape_id=${etapeId}`)
             .then(response => {
                 setDocuments(Array.isArray(response.data) ? response.data : response.data.member ?? []);
             })

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+
 import Header from "../../components/layout/Header.jsx";
+import api from "../../services/axios.js";
 
 export default function EditBusiness() {
     const { clientId } = useParams();
@@ -20,7 +21,7 @@ export default function EditBusiness() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/pros/${clientId}`)
+        api.get(`http://localhost:8000/api/pros/${clientId}`)
             .then(response => {
                 const d = response.data;
                 setFormData({
@@ -49,7 +50,7 @@ export default function EditBusiness() {
         setSaving(true);
         setError(null);
         try {
-            await axios.patch(
+            await api.patch(
                 `http://localhost:8000/api/pros/${clientId}`,
                 formData,
                 { headers: { 'Content-Type': 'application/merge-patch+json' } }

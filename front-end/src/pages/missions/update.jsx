@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import Header from "../../components/layout/Header.jsx";
 import { getNomClient } from "../../utils/client.js";
+import api from "../../services/axios.js";
 
 export default function Update() {
     const { missionId } = useParams();
@@ -22,8 +22,8 @@ export default function Update() {
 
     useEffect(() => {
         Promise.all([
-            axios.get(`http://localhost:8000/api/missions/${missionId}`),
-            axios.get('http://localhost:8000/api/clients')
+            api.get(`http://localhost:8000/api/missions/${missionId}`),
+            api.get('http://localhost:8000/api/clients')
         ])
             .then(([responseMission, responseClients]) => {
                 const m = responseMission.data;
@@ -53,7 +53,7 @@ export default function Update() {
         setSaving(true);
         setError(null);
         try {
-            await axios.patch(
+            await api.patch(
                 `http://localhost:8000/api/missions/${missionId}`,
                 formData,
                 { headers: { 'Content-Type': 'application/merge-patch+json' } }

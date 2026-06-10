@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/layout/Header.jsx";
+import api from "../../services/axios.js";
 
 export default function Create() {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function Create() {
         setError(null);
 
         try {
-            await axios.post('http://localhost:8000/api/pros', formData, {
+            await api.post('http://localhost:8000/api/pros', formData, {
                 headers: {
                     'Content-Type': 'application/ld+json',
                     'Accept': 'application/ld+json'

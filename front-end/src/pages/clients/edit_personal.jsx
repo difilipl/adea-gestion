@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import Header from "../../components/layout/Header.jsx";
+import api from "../../services/axios.js";
 
 export default function EditPersonal() {
     const { clientId } = useParams();
@@ -20,7 +20,7 @@ export default function EditPersonal() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/particuliers/${clientId}`)
+        api.get(`http://localhost:8000/api/particuliers/${clientId}`)
             .then(response => {
                 const d = response.data;
                 setFormData({
@@ -49,7 +49,7 @@ export default function EditPersonal() {
         setSaving(true);
         setError(null);
         try {
-            await axios.patch(
+            await api.patch(
                 `http://localhost:8000/api/particuliers/${clientId}`,
                 formData,
                 { headers: { 'Content-Type': 'application/merge-patch+json' } }

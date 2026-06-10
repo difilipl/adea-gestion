@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import axios from "axios";
 import Header from "../../components/layout/Header.jsx";
+import api from "../../services/axios.js";
 
 const formatDate = (dateString) => {
     if (!dateString) return "Date inconnue";
@@ -35,7 +35,7 @@ export function Details() {
 
     useEffect(() => {
         if (missionId) {
-            axios.get(`http://localhost:8000/api/missions/${missionId}`)
+            api.get(`http://localhost:8000/api/missions/${missionId}`)
                 .then(response => {
                     setMission(response.data);
                     setLoading(false);
@@ -45,7 +45,7 @@ export function Details() {
                     setLoading(false);
                 });
 
-            axios.get(`http://localhost:8000/api/documents?mission_id=${missionId}`)
+            api.get(`http://localhost:8000/api/documents?mission_id=${missionId}`)
                 .then(response => {
                     setDocuments(Array.isArray(response.data) ? response.data : response.data.member ?? []);
                 })
@@ -59,7 +59,7 @@ export function Details() {
     const deleteMission = async (missionId) => {
         if (!window.confirm("Voulez-vous vraiment supprimer cette mission?")) return;
         try {
-            await axios.delete(`http://localhost:8000/api/missions/${missionId}`);
+            await api.delete(`http://localhost:8000/api/missions/${missionId}`);
             navigate("/missions");
         } catch (err) {
             console.error("Erreur lors de la suppression :", err);
@@ -72,7 +72,7 @@ export function Details() {
         e.stopPropagation();
         setTogglingEtape(etape.id);
         try {
-            await axios.patch(
+            await api.patch(
                 `http://localhost:8000/api/etapes/${etape.id}`,
                 { est_terminee: !etape.est_terminee },
                 { headers: { 'Content-Type': 'application/merge-patch+json' } }
@@ -100,7 +100,7 @@ export function Details() {
         formData.append("nom", nomDoc || fichier.name);
         formData.append("mission_id", missionId);
         try {
-            const res = await axios.post("http://localhost:8000/api/documents/upload", formData);
+            const res = await api.post("http://localhost:8000/api/documents/upload", formData);
             setDocuments(prev => [...prev, res.data]);
             setShowModal(false);
             setFichier(null);
@@ -116,7 +116,7 @@ export function Details() {
     const handleDeleteDocument = async (docId) => {
         if (!window.confirm("Supprimer ce document ?")) return;
         try {
-            await axios.delete(`http://localhost:8000/api/documents/${docId}`);
+            await api.delete(`http://localhost:8000/api/documents/${docId}`);
             setDocuments(prev => prev.filter(d => d.id !== docId));
         } catch (err) {
             console.error("Erreur suppression document:", err);

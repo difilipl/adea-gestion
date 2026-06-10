@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Header from "../../../components/layout/Header.jsx";
+import api from "../../../services/axios.js";
 
 export default function Missions() {
     const [modeles, setModeles] = useState([]);
@@ -13,7 +13,7 @@ export default function Missions() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/modele_missions')
+        api.get('http://localhost:8000/api/modele_missions')
             .then(response => {
                 const data = response.data.member || response.data["hydra:member"] || [];
                 setModeles(data);
@@ -30,7 +30,7 @@ export default function Missions() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/modele_missions',
+            const response = await api.post('http://localhost:8000/api/modele_missions',
                 { nom: nomModele },
                 { headers: { 'Content-Type': 'application/ld+json' } }
             );
@@ -56,7 +56,7 @@ export default function Missions() {
         }
 
         try {
-            await axios.delete(`http://localhost:8000/api/modele_missions/${id}`);
+            await api.delete(`http://localhost:8000/api/modele_missions/${id}`);
             setModeles(modeles.filter(modele => modele.id !== id));
         } catch (error) {
             console.error("Erreur lors de la suppression :", error);
