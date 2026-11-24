@@ -18,3 +18,4 @@ Thumbs.db
 /front/node_modules/
 /front/dist/
 /front/.env.local
+.idea/
